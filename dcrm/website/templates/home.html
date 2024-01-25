@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="col-md-6 offset-md-3">
+    <h1>hello world !!</h1>
+    <form method="post" action="{%url 'home' %}">
+        {% csrf_token %}
+        
+
+    </form>
+
+</div>
+{% endblock %}
