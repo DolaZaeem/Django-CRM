@@ -1,0 +1,1 @@
+SWAP Django's inbuilt authentication with Google's authentication
