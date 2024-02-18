@@ -1,3 +1,0 @@
-virt/scripts/activate
-
-superuser pass : zm@Django1
