@@ -6,6 +6,7 @@ from .models import Record
 
 # Create your views here.
 
+
 def home(request):
     records = Record.objects.all()
 
