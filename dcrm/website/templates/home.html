@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
 
 <div>
     <div>
@@ -34,6 +36,9 @@
                 </tr>
                 {% endfor %}
                 {% endif %}
+                <tr>
+                    <td><a class="nav-link" href="{% url 'add_record' %}"><i class="fas fa-plus"></i></a></td>
+                </tr>
             </tbody>
         </table>
         {% else %}

@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'website',
     'easyaudit',
+    'django_tables2',
 ]
 
 MIDDLEWARE = [
