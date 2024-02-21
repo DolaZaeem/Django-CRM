@@ -13,26 +13,32 @@
                 <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Name</th>
+                    <th scope="col">Quote Number</th>
+                    <th scope="col">Quote Date</th>
                     <th scope="col">Email</th>
                     <th scope="col">Phone</th>
                     <th scope="col">Address</th>
                     <th scope="col">City</th>
                     <th scope="col">State</th>
                     <th scope="col">zipcode</th>
+                    <th scope="col">Currency</th>
                 </tr>
             </thead>
             <tbody>
                 {% if records %}
-                {% for record in records %}
+                {% for qt in records %}
                 <tr>
-                    <td><a href="{%url 'record' record.id %}">{{ record.id }}</a></td>
-                    <td>{{ record.first_name }} {{ record.last_name }}</td>
-                    <td>{{ record.email }}</td>
-                    <td>{{ record.phone }}</td>
-                    <td>{{ record.Address }}</td>
-                    <td>{{ record.city }}</td>
-                    <td>{{ record.state }} </td>
-                    <td>{{ record.zipcode }}</td>
+                    <td><a href="{%url 'record' qt.id %}">{{ qt.id }}</a></td>
+                    <td>{{ qt.Customer_name }}</td>
+                    <td>{{ qt.Quote_no }}</td>
+                    <td>{{ qt.Quote_date }}</td>
+                    <td>{{ qt.Customer_email }}</td>
+                    <td>{{ qt.Phone }}</td>
+                    <td>{{ qt.Address }}</td>
+                    <td>{{ qt.City }}</td>
+                    <td>{{ qt.State }} </td>
+                    <td>{{ qt.Zipcode }}</td>
+                    <td>{{ qt.Currency}}</td>
                 </tr>
                 {% endfor %}
                 {% endif %}

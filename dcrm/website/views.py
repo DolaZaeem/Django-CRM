@@ -1,13 +1,13 @@
 from django.shortcuts import render , redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-from .forms import SignUpForm , AddRecordForm
-from .models import Record
+from .forms import SignUpForm , AddQtOvr
+from .models import Quote_ovr
 
 # Create your views here.
 
 def home(request):
-    records = Record.objects.all()
+    records = Quote_ovr.objects.all()
 
 
     # Check to see if loginig in
@@ -56,7 +56,7 @@ def register_user(request):
 def customer_record(request,pk):
     if request.user.is_authenticated:
         #Look up record
-        customer_record = Record.objects.get(id=pk)
+        customer_record = Quote_ovr.objects.get(id=pk)
         return render(request,'record.html',{'customer_record':customer_record})
     else:
         messages.success(request,"Log in to view details of records")
@@ -64,7 +64,7 @@ def customer_record(request,pk):
     
 def delete_record(request,pk):
     if request.user.is_authenticated:
-        delete_it = Record.objects.get(id=pk)
+        delete_it = Quote_ovr.objects.get(id=pk)
         delete_it.delete()
         messages.success(request,"Record Deleted Successfully")
         return redirect('home')
@@ -73,22 +73,22 @@ def delete_record(request,pk):
         return redirect('home')
     
 def add_record(request):
-    form = AddRecordForm(request.POST or None)
-    if request.user.is_authenticated:
-        if request.method =="POST":
-            if form.is_valid():
-                add_record = form.save()
-                messages.success(request,"Record Saved...")
-                return redirect('home')
-        return render(request,'add_record.html',{'form':form})
+    if request.method == 'POST':
+        form = AddQtOvr(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Added record")
+            return redirect('home')
     else:
-         messages.success(request,"You must be logged in.")
-         return redirect('home')
+        form =AddQtOvr()
+        return render(request,'add_record.html',{'form':form})
+    return render(request,'add_record.html',{'form':form})
+
 
 def update_record(request,pk):
     if request.user.is_authenticated:
-        current_record = Record.objects.get(id=pk)
-        form = AddRecordForm(request.POST or None,instance=current_record)
+        current_record = Quote_ovr.objects.get(id=pk)
+        form = AddQtOvr(request.POST or None,instance=current_record)
         if form.is_valid():
             form.save()
             messages.success(request,"Record has been update")

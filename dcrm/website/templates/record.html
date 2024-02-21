@@ -6,16 +6,16 @@
 
 <div class="card">
     <div class="card-header">
-        {{ customer_record.first_name }} {{ customer_record.last_name }}
+        {{ customer_record.Customer_name }}
     </div>
     <div class="card-body">
         <p class="card-text">
-            <strong>Email:</strong> {{ customer_record.email }}<br>
-            <strong>Phone:</strong> {{ customer_record.phone }}<br>
+            <strong>Email:</strong> {{customer_record.Customer_email }}<br>
+            <strong>Phone:</strong> {{ customer_record.Phone }}<br>
             <strong>Address:</strong> {{ customer_record.Address }}<br>
-            <strong>City:</strong> {{ customer_record.city }}<br>
-            <strong>state:</strong> {{ customer_record.state }}<br>
-            <strong>zipcode:</strong> {{ customer_record.zipcode }}<br>
+            <strong>City:</strong> {{ customer_record.City }}<br>
+            <strong>state:</strong> {{ customer_record.State }}<br>
+            <strong>zipcode:</strong> {{ customer_record.Zipcode }}<br>
         </p>
     </div>
 </div>
