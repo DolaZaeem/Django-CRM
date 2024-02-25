@@ -45,10 +45,9 @@ class AddQtOvr(forms.ModelForm):
     Zipcode = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"Zipcode","class":"form-control"}),label="")
     Currency = forms.ChoiceField(required=True, choices=Quote_ovr.CURRENCY, widget=forms.widgets.Select(attrs={'class':'form-control'}),label="")
     class Meta:
-        model = Quote_ovr
-        fields = ['Quote_no', 'Quote_date', 'Customer_name', 'Customer_email', 'Phone', 'Address', 'City', 'State', 'Zipcode']
-        exclude = ('user',)
-
+            model = Quote_ovr
+            fields = ['Quote_no', 'Quote_date', 'Customer_name', 'Customer_email', 'Phone', 'Address', 'City', 'State', 'Zipcode']
+            exclude = ('user',)
 #Create A Quote Detail Form
 class AddQtDetail(forms.ModelForm):
     Quote_no  = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"Quote No.","class":"form-control"}),label="")
