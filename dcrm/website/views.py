@@ -1,7 +1,7 @@
 from django.shortcuts import render , redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-from .forms import SignUpForm , AddQtOvr
+from .forms import SignUpForm , AddQtOvr,AddQtDetail
 from .models import Quote_ovr
 
 # Create your views here.
@@ -97,3 +97,18 @@ def update_record(request,pk):
     else:
         messages.success(request,"You must be logged in.")
         return redirect('home')
+    
+def add_items(request, pk):
+    if request.user.is_authenticated:
+        quote_ovr = Quote_ovr.objects.get(id=pk)
+        if request.method == 'POST':
+            form = AddQtDetail(request.POST)
+            if form.is_valid():
+                form.instance.Quote_no = quote_ovr
+                form.save()
+                return redirect('home')
+        else:
+            form = AddQtDetail()
+        return render(request, 'add_items.html', {'form': form, 'quote_ovr': quote_ovr})
+    else:
+        return redirect('login')

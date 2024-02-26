@@ -4,11 +4,14 @@
 <div class="col-md-5 offset-md-3 border border-dark rounded-4 py-5 px-5 bg-light">
 <h1>Add Item</h1>
         <br>
+        <h5>QUOTE NO: {{quote_ovr.Quote_no}}</h5>
+        <hr>
         <form method="post">
+            
             {% csrf_token %}
             {{ form.as_p }}
            
-            <button type="submit" class="btn btn-success offset-md-4">UPDATE Record</button>
+            <button type="submit" class="btn btn-success offset-md-4">Add Item</button>
             <a href="{% url 'home' %}" class="btn btn-dark">BACK</a>
         </form>
 </div>

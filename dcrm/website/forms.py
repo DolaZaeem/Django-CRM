@@ -50,7 +50,7 @@ class AddQtOvr(forms.ModelForm):
             exclude = ('user',)
 #Create A Quote Detail Form
 class AddQtDetail(forms.ModelForm):
-    Quote_no  = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"Quote No.","class":"form-control"}),label="")
+    '''Quote_no  = forms.ModelChoiceField(queryset=Quote_ovr.objects.all(), widget=forms.widgets.Select(attrs={'placeholder':"Quote No.","class":"form-control"}),label="")'''
     Item_name = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"Item Name","class":"form-control"}),label="")
     Item_qty = forms.IntegerField(required=True, widget=forms.widgets.NumberInput(attrs={'placeholder':"Item Qty","class":"form-control"}),label="")
     Item_no = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"Item no","class":"form-control"}),label="")
@@ -58,4 +58,4 @@ class AddQtDetail(forms.ModelForm):
 
     class Meta:
         model = Quote_det
-        exclude =("user",)
+        exclude =("user","Quote_no")    
