@@ -6,14 +6,15 @@
         <br>
         <h5>QUOTE NO: {{quote_ovr.Quote_no}}</h5>
         <hr>
-        <form method="post">
+        <form method="post" autocomplete="on">
             
             {% csrf_token %}
             {{ form.as_p }}
-           
-            <button type="submit" class="btn btn-success offset-md-4">Add Item</button>
-            <a href="{% url 'home' %}" class="btn btn-dark">BACK</a>
+            <button type="submit" class="btn btn-success offset-md-4">Add</button>        
+            <a href="{% url 'record' quote_ovr.id %}" class="btn btn-dark">BACK</a>
         </form>
+        
+
 </div>
 
 

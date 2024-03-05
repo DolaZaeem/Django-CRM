@@ -2,7 +2,7 @@ from django.shortcuts import render , redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from .forms import SignUpForm , AddQtOvr,AddQtDetail
-from .models import Quote_ovr
+from .models import Quote_ovr , Quote_det
 
 # Create your views here.
 
@@ -57,7 +57,9 @@ def customer_record(request,pk):
     if request.user.is_authenticated:
         #Look up record
         customer_record = Quote_ovr.objects.get(id=pk)
-        return render(request,'record.html',{'customer_record':customer_record})
+        quote_det = Quote_det.objects.filter(Quote_no=pk)
+   
+        return render(request,'record.html',{'customer_record':customer_record,"quote_details":quote_det})
     else:
         messages.success(request,"Log in to view details of records")
         return redirect('home')
@@ -78,7 +80,7 @@ def add_record(request):
         if form.is_valid():
             form.save()
             messages.success(request,"Added record")
-            return redirect('home')
+            return redirect('add_items', pk=form.instance.pk)
     else:
         form =AddQtOvr()
         return render(request,'add_record.html',{'form':form})
@@ -106,9 +108,33 @@ def add_items(request, pk):
             if form.is_valid():
                 form.instance.Quote_no = quote_ovr
                 form.save()
-                return redirect('home')
+                return redirect('record', pk=quote_ovr.pk)
         else:
             form = AddQtDetail()
         return render(request, 'add_items.html', {'form': form, 'quote_ovr': quote_ovr})
     else:
         return redirect('login')
+    
+def update_item(request,pk):
+    if request.user.is_authenticated:
+        current_record = Quote_det.objects.get(id=pk)
+        form = AddQtDetail(request.POST or None,instance=current_record)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Record has been update")
+            return redirect('home')
+        return render(request,'item_details.html',{'form':form})
+    else:
+        messages.success(request,"You must be logged in.")
+        return redirect('home')
+    
+def delete_items(request,pk):
+    if request.user.is_authenticated:
+        delete_it = Quote_det.objects.get(id=pk)
+        delete_it.delete()
+        messages.success(request,"Item Deleted Successfully")
+        return redirect('home')
+    else:
+        messages.success(request,"You must be logged in to delete that")
+        return redirect('home')
+    

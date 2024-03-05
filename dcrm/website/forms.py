@@ -34,7 +34,7 @@ class SignUpForm(UserCreationForm):
 
 #Create A Quote overview Form
 class AddQtOvr(forms.ModelForm):
-    Quote_no  = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"Quote No.","class":"form-control"}),label="")
+    Quote_no  = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"Quote No.","class":"form-control","autocomplete":"off"}),label="")
     Quote_date = forms.DateField(required=True, widget=forms.widgets.DateInput(attrs={'placeholder':"Quote Date","class":"form-control","type":"date"}),label="")
     Customer_name = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"Customer Name","class":"form-control"}),label="")
     Customer_email = forms.CharField(required=True, widget=forms.widgets.EmailInput(attrs={'placeholder':"Customer Email","class":"form-control"}),label="")
@@ -46,7 +46,7 @@ class AddQtOvr(forms.ModelForm):
     Currency = forms.ChoiceField(required=True, choices=Quote_ovr.CURRENCY, widget=forms.widgets.Select(attrs={'class':'form-control'}),label="")
     class Meta:
             model = Quote_ovr
-            fields = ['Quote_no', 'Quote_date', 'Customer_name', 'Customer_email', 'Phone', 'Address', 'City', 'State', 'Zipcode']
+            fields = ['Quote_no', 'Quote_date', 'Customer_name', 'Customer_email', 'Phone', 'Address', 'City', 'State', 'Zipcode','Currency']
             exclude = ('user',)
 #Create A Quote Detail Form
 class AddQtDetail(forms.ModelForm):

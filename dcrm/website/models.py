@@ -20,7 +20,7 @@ class Quote_ovr(models.Model):
                ('USD','US DOLLAR'),
                ('GBP','GREAT BRITISH POUND'))
 
-    Currency = models.CharField(max_length = 3, choices = CURRENCY,default ='EUR')
+    Currency = models.CharField(max_length = 3, choices = CURRENCY)
     def __str__(self):
         return(f"{self.Quote_no}-{self.Customer_name}")
     
@@ -30,5 +30,6 @@ class Quote_det(models.Model):
     Item_name = models.CharField(max_length = 200,null=True)
     Item_qty = models.PositiveIntegerField(null=True)
     Item_no = models.CharField(max_length = 50,null=True)
+
     def __str__(self):
-        return(f"{self.Quote_no}")
+        return(f"{self.Item_name}")

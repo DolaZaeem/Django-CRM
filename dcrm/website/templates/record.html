@@ -6,7 +6,7 @@
 
 <div class="card">
     <div class="card-header">
-        {{ customer_record.Customer_name }}
+        <strong>{{customer_record.Quote_no }}</strong>
     </div>
     <div class="card-body">
         <p class="card-text">
@@ -17,7 +17,38 @@
             <strong>state:</strong> {{ customer_record.State }}<br>
             <strong>zipcode:</strong> {{ customer_record.Zipcode }}<br>
         </p>
+        <table class="table table-striped table-hover table-bordered table-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Item Name</th>
+                    <th scope="col">Item No</th>
+                    <th scope="col">Item Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if quote_details %}
+                {% for qt in quote_details%}
+                <tr>
+                    <td><a href="{%url 'update_item' qt.id %}">{{ qt.Item_name }}</a></td>
+                    <td>{{qt.Item_no}}</td>
+                    <td>{{qt.Item_qty}}
+                        <a href="{% url 'delete_items' qt.id %}">
+                        <i class="fa-solid fa-trash" style="margin-left: 75%;margin-right: 5%;"></i>
+                        </a>
+                        <a href="{%url 'update_item' qt.id %}">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+                <tr>
+                    <td><a class="nav-link" href="{% url 'add_items' customer_record.id %}"><i class="fas fa-plus"></i></a></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+    
 </div>
 
 <br>
@@ -26,8 +57,6 @@
 <a href="{% url 'delete_record' customer_record.id %}" class="btn btn-danger">DELETE</a>
 
 <a href="{% url 'update_record' customer_record.id %}" class="btn btn-warning">UPDATE RECORD</a>
-
-<a href="{% url 'add_items' customer_record.id %}" class="btn btn-dark">ADD ITEM to this QUOTE</a>
 
 
 {% endblock %}
