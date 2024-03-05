@@ -7,9 +7,8 @@ from .models import Quote_ovr , Quote_det
 # Create your views here.
 
 def home(request):
-    records = Quote_ovr.objects.all()
-
-
+    records = Quote_ovr.objects.filter(quote_det__isnull=False)
+   
     # Check to see if loginig in
     if request.method == 'POST':
         username = request.POST['username']

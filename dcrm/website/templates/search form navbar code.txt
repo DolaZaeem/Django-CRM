@@ -1,0 +1,7 @@
+<div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+      {% if user.is_authenticated %}
+      <form class="d-flex w-50" role="search">
+        <input class="form-control me-2  rounded-4" type="search" placeholder="Search" aria-label="Search">
+      </form>
+      {% endif %}
+    </div>
