@@ -137,3 +137,10 @@ def delete_items(request,pk):
         messages.success(request,"You must be logged in to delete that")
         return redirect('home')
     
+def Incomplete(request):
+    if request.user.is_authenticated:
+        records = Quote_ovr.objects.filter(quote_det__isnull=True)
+        return render(request, 'Incomplete.html', {'records':records})
+    else:
+        messages.success(request,"You must be logged in to view that")
+        return redirect('home')

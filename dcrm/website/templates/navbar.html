@@ -4,8 +4,8 @@
 </head>
 <style>
   .d-flex.w-50 {
-  margin: 0 auto;
-}
+    margin: 0 auto;
+  }
 </style>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -20,8 +20,18 @@
     {% if user.is_authenticated %}
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item menu-item">
-          <a class="nav-link menu-link" href="#">Menu</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Menu <i class="fa-solid fa-bars"></i>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'Incomplete' %}">Quotes with no items</a></li>
+            <li><a class="dropdown-item" href="#">Filter and Create Data visualization</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="#">Import Data from Spreadsheet</a></li>
+          </ul>
         </li>
       </ul>
       <!--Search Form -->

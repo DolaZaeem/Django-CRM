@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  </head>
+  
+  <div>
+      <div>
+          <table class="table table-striped table-hover table-bordered table-sm">
+              <thead class="table-dark">
+                  <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Quote Number</th>
+                      <th scope="col">Quote Date</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Phone</th>
+                      <th scope="col">Address</th>
+                      <th scope="col">City</th>
+                      <th scope="col">State</th>
+                      <th scope="col">zipcode</th>
+                      <th scope="col">Currency</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% if records %}
+                  {% for qt in records %}
+                  <tr>
+                      <td><a href="{%url 'record' qt.id %}">{{ qt.id }}</a></td>
+                      <td>{{ qt.Customer_name }}</td>
+                      <td>{{ qt.Quote_no }}</td>
+                      <td>{{ qt.Quote_date }}</td>
+                      <td>{{ qt.Customer_email }}</td>
+                      <td>{{ qt.Phone }}</td>
+                      <td>{{ qt.Address }}</td>
+                      <td>{{ qt.City }}</td>
+                      <td>{{ qt.State }} </td>
+                      <td>{{ qt.Zipcode }}</td>
+                      <td>{{ qt.Currency}}</td>
+                  </tr>
+                  {% endfor %}
+                  {% endif %}
+                  <tr>
+                      <td><a class="nav-link" href="{% url 'add_record' %}"><i class="fas fa-plus"></i></a></td>
+                  </tr>
+              </tbody>
+          </table>
+          
+  
+  
+      </div>
+{% endblock %}
