@@ -1,0 +1,7 @@
+Q(Customer_name__icontains=query)|
+Q(Quote_date__icontains=query)|
+Q(Quote_no__icontains=query)|
+Q(City__icontains=query)|
+Q(Address__icontains=query)|
+Q(State__icontains=query)|
+Q(Currency__icontains=query)

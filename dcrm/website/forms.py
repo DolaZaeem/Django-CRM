@@ -59,3 +59,4 @@ class AddQtDetail(forms.ModelForm):
     class Meta:
         model = Quote_det
         exclude =("user","Quote_no")    
+

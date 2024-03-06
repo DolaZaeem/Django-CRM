@@ -13,5 +13,6 @@ urlpatterns = [
     path('add_items/<int:pk>',views.add_items,name='add_items'),
     path('item_details/<int:pk>',views.update_item,name='update_item'),
     path('delete_items/<int:pk>',views.delete_items,name='delete_items'),
-    path('Incomplete',views.Incomplete,name='Incomplete'),
+    path('Incomplete',views.Incomplete,name='Incomplete'), #quotes without items
+    path('search/', views.search, name='search'),
 ]

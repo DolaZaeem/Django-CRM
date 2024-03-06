@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Search Results for "{{query}}"</h1>
+{% if quote_det %}
+<h2>Quote Det</h2>
+<table class="table table-striped table-hover table-bordered table-sm">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">Item Name</th>
+            <th scope="col">Item No</th>
+            <th scope="col">Item Quantity</th>
+            <th scope="col">Quote no</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for quote in quote_det %}
+        <tr>
+            <td>{{quote.Item_name }}</td>
+            <td>{{quote.Item_no}}</td>
+            <td>{{quote.Item_qty}}</td>
+            <td>{{quote.Quote_no}}</td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+{% else%}
+<h2>No results in Quote Details</h2>
+{% endif %}
+{% if quote_ovr %}
+<h2>Quote Ovr</h2>
+<table class="table table-striped table-hover table-bordered table-sm">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Quote Number</th>
+            <th scope="col">Quote Date</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Address</th>
+            <th scope="col">City</th>
+            <th scope="col">State</th>
+            <th scope="col">zipcode</th>
+            <th scope="col">Currency</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for quote in quote_ovr %}
+        <tr>
+            <td>{{ quote.id }}</td>
+            <td>{{ quote.Customer_name }}</td>
+            <td>{{ quote.Quote_no }}</td>
+            <td>{{ quote.Quote_date }}</td>
+            <td>{{ quote.Customer_email }}</td>
+            <td>{{ quote.Phone }}</td>
+            <td>{{ quote.Address }}</td>
+            <td>{{ quote.City }}</td>
+            <td>{{ quote.State }} </td>
+            <td>{{ quote.Zipcode }}</td>
+            <td>{{ quote.Currency}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else%}
+<h2>No results in Quote overviews</h2>
+{% endif %}
+{% endblock %}

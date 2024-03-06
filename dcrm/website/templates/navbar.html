@@ -35,8 +35,9 @@
         </li>
       </ul>
       <!--Search Form -->
-      <form class="d-flex  w-50" role="search">
-        <input class="form-control me-2  rounded-4" type="search" placeholder="Search" aria-label="Search">
+      <form class="d-flex  w-50" role="search" action="{% url 'search' %}" method="get">
+        <input class="form-control me-2  rounded-4" type="search" placeholder="Search" aria-label="Search" name="q">
+        <button class="btn btn-outline-light" type="submit">Search</button>
       </form>
       <!--Search Form-->
     </div>
