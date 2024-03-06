@@ -147,18 +147,22 @@ def Incomplete(request):
         return redirect('home')
     
 def search(request):
-    query = request.GET.get('q')
-    if query:
-        quote_det = Quote_det.objects.filter(Q(Item_name__icontains=query)|Q(Item_no__icontains=query)|Q(Item_qty__icontains=query))
-        quote_ovr = Quote_ovr.objects.filter(Q(Customer_name__icontains=query)|
-                                            Q(Quote_date__icontains=query)|
-                                            Q(Quote_no__icontains=query)|
-                                            Q(City__icontains=query)|
-                                            Q(Address__icontains=query)|
-                                            Q(State__icontains=query)|
-                                            Q(Currency__icontains=query)|
-                                            Q(Zipcode__icontains=query))
-        context = {'query':query,'quote_det': quote_det, 'quote_ovr': quote_ovr}
-        return render(request, 'search_results.html', context)
+    if request.user.is_authenticated:
+        query = request.GET.get('q')
+        if query:
+            quote_det = Quote_det.objects.filter(Q(Item_name__icontains=query)|Q(Item_no__icontains=query)|Q(Item_qty__icontains=query))
+            quote_ovr = Quote_ovr.objects.filter(Q(Customer_name__icontains=query)|
+                                                Q(Quote_date__icontains=query)|
+                                                Q(Quote_no__icontains=query)|
+                                                Q(City__icontains=query)|
+                                                Q(Address__icontains=query)|
+                                                Q(State__icontains=query)|
+                                                Q(Currency__icontains=query)|
+                                                Q(Zipcode__icontains=query))
+            context = {'query':query,'quote_det': quote_det, 'quote_ovr': quote_ovr}
+            return render(request, 'search_results.html', context)
+        else:
+            return render(request, 'search_form.html')
     else:
-        return render(request, 'search_form.html')
+        messages.success(request,"You must be logged in to view that")
+        return redirect('home')

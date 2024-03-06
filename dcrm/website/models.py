@@ -22,7 +22,7 @@ class Quote_ovr(models.Model):
 
     Currency = models.CharField(max_length = 3, choices = CURRENCY)
     def __str__(self):
-        return(f"{self.Quote_no}-{self.Customer_name}")
+        return(f"{self.id}")
     
 class Quote_det(models.Model):
     record_created_at = models.DateTimeField(auto_now_add=True)
