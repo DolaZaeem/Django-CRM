@@ -30,6 +30,12 @@ class Quote_det(models.Model):
     Item_name = models.CharField(max_length = 200,null=True)
     Item_qty = models.PositiveIntegerField(null=True)
     Item_no = models.CharField(max_length = 50,null=True)
+    Item_per_unit_price = models.PositiveIntegerField(null=True)
+
 
     def __str__(self):
         return(f"{self.Item_name}")
+    
+    @property
+    def product_line_total(self):
+        return self.Item_qty * self.Item_per_unit_price

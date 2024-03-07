@@ -54,9 +54,12 @@ class AddQtDetail(forms.ModelForm):
     Item_name = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"Item Name","class":"form-control"}),label="")
     Item_qty = forms.IntegerField(required=True, widget=forms.widgets.NumberInput(attrs={'placeholder':"Item Qty","class":"form-control"}),label="")
     Item_no = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"Item no","class":"form-control"}),label="")
+    Item_per_unit_price = forms.IntegerField(required=True, widget=forms.widgets.NumberInput(attrs={'placeholder':"Per unit Price","class":"form-control"}),label="")
+
 
 
     class Meta:
         model = Quote_det
-        exclude =("user","Quote_no")    
+        fields = ['Item_name','Item_qty','Item_no','Item_per_unit_price']
+        exclude =("user","Quote_no","product_line_total")    
 

@@ -7,20 +7,26 @@
 <table class="table table-striped table-hover table-bordered table-sm">
     <thead class="table-dark">
         <tr>
+            <th scope="col">Quote no</th>
             <th scope="col">Item Name</th>
             <th scope="col">Item No</th>
             <th scope="col">Item Quantity</th>
-            <th scope="col">Quote no</th>
+            <th scope="col">Per unit Price</th>
+            <th scope="col">Total</th>
+            
+
         </tr>
     </thead>
     <tbody>
 
         {% for quote in quote_det %}
         <tr>
+            <td><a href="{%url 'record' quote.Quote_no %}">{{quote.Quote_no}}</a></td>
             <td>{{quote.Item_name }}</td>
             <td>{{quote.Item_no}}</td>
             <td>{{quote.Item_qty}}</td>
-            <td>{{quote.Quote_no}}</td>
+            <td>{{quote.Item_per_unit_price}}</td>
+            <td>{{quote.product_line_total}}</td>
         </tr>
         {% endfor %}
 
@@ -50,7 +56,7 @@
     <tbody>
         {% for quote in quote_ovr %}
         <tr>
-            <td>{{ quote.id }}</td>
+            <td><a href="{%url 'record' quote.id %}">{{ quote.id }}</a></td>
             <td>{{ quote.Customer_name }}</td>
             <td>{{ quote.Quote_no }}</td>
             <td>{{ quote.Quote_date }}</td>

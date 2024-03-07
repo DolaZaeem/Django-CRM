@@ -23,32 +23,37 @@
                     <th scope="col">Item Name</th>
                     <th scope="col">Item No</th>
                     <th scope="col">Item Quantity</th>
+                    <th scope="col">Per unit Price</th>
+                    <th scope="col">Total</th>
                 </tr>
             </thead>
             <tbody>
                 {% if quote_details %}
-                {% for qt in quote_details%}
+                {% for qt in quote_details%}    
                 <tr>
                     <td><a href="{%url 'update_item' qt.id %}">{{ qt.Item_name }}</a></td>
                     <td>{{qt.Item_no}}</td>
-                    <td>{{qt.Item_qty}}
-                        <a href="{% url 'delete_items' qt.id %}">
-                        <i class="fa-solid fa-trash" style="margin-left: 75%;margin-right: 5%;"></i>
+                    <td>{{qt.Item_qty}}</td>
+                    <td>{{qt.Item_per_unit_price}}</td>
+                    <td>{{qt.product_line_total}}
+                        <!-- <a href="{% url 'delete_items' qt.id %}">
+                            <i class="fa-solid fa-trash" style="margin-left: 75%;margin-right: 5%;"></i>
                         </a>
                         <a href="{%url 'update_item' qt.id %}">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                        </a>
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </a> -->
                     </td>
                 </tr>
                 {% endfor %}
                 {% endif %}
                 <tr>
-                    <td><a class="nav-link" href="{% url 'add_items' customer_record.id %}"><i class="fas fa-plus"></i></a></td>
+                    <td><a class="nav-link" href="{% url 'add_items' customer_record.id %}"><i
+                                class="fas fa-plus"></i></a></td>
                 </tr>
             </tbody>
         </table>
     </div>
-    
+
 </div>
 
 <br>
