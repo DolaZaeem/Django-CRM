@@ -8,8 +8,7 @@ from django.db.models import Q
 # Create your views here.
 
 def home(request):
-    records = Quote_ovr.objects.filter(quote_det__isnull=False)
-   
+    records = Quote_ovr.objects.filter(quote_det__isnull=False).distinct()
     # Check to see if loginig in
     if request.method == 'POST':
         username = request.POST['username']
@@ -121,8 +120,9 @@ def update_item(request,pk):
         form = AddQtDetail(request.POST or None,instance=current_record)
         if form.is_valid():
             form.save()
-            messages.success(request,"Record has been update")
-            return redirect('home')
+            messages.success(request,"Record has been updated")
+            return redirect('record', pk=current_record.Quote_no)
+            
         return render(request,'item_details.html',{'form':form})
     else:
         messages.success(request,"You must be logged in.")
@@ -133,7 +133,7 @@ def delete_items(request,pk):
         delete_it = Quote_det.objects.get(id=pk)
         delete_it.delete()
         messages.success(request,"Item Deleted Successfully")
-        return redirect('home')
+        return redirect('record', pk=delete_it.Quote_no)
     else:
         messages.success(request,"You must be logged in to delete that")
         return redirect('home')
@@ -163,6 +163,14 @@ def search(request):
             return render(request, 'search_results.html', context)
         else:
             return render(request, 'search_form.html')
+    else:
+        messages.success(request,"You must be logged in to view that")
+        return redirect('home')
+
+def importdata(request):
+    if request.user.is_authenticated:
+        messages.success(request,"welcome")
+        return render(request, 'importdata.html')
     else:
         messages.success(request,"You must be logged in to view that")
         return redirect('home')

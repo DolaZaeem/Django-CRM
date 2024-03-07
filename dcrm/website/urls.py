@@ -15,4 +15,5 @@ urlpatterns = [
     path('delete_items/<int:pk>',views.delete_items,name='delete_items'),
     path('Incomplete',views.Incomplete,name='Incomplete'), #quotes without items
     path('search/', views.search, name='search'),
+    path('importdata/', views.importdata, name='importdata'),
 ]

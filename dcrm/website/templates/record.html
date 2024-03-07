@@ -24,7 +24,7 @@
                     <th scope="col">Item No</th>
                     <th scope="col">Item Quantity</th>
                     <th scope="col">Per unit Price</th>
-                    <th scope="col">Total</th>
+                    <th scope="col" style="width:30%">Total</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,12 +36,12 @@
                     <td>{{qt.Item_qty}}</td>
                     <td>{{qt.Item_per_unit_price}}</td>
                     <td>{{qt.product_line_total}}
-                        <!-- <a href="{% url 'delete_items' qt.id %}">
-                            <i class="fa-solid fa-trash" style="margin-left: 75%;margin-right: 5%;"></i>
+                         <a href="{% url 'delete_items' qt.id %}">
+                            <i class="fa-solid fa-trash" style="margin-left: 250px;margin-right: 5%;"></i>
                         </a>
                         <a href="{%url 'update_item' qt.id %}">
                             <i class="fa-solid fa-pen-to-square"></i>
-                        </a> -->
+                        </a> 
                     </td>
                 </tr>
                 {% endfor %}
