@@ -1,9 +1,13 @@
 from django.db import models
+from django.forms import ValidationError
 
 
 # Create your models here.
 
-
+'''def validate_currency(value):
+    if value not in Quote_ovr.CURRENCY:
+        raise ValidationError('Invalid currency. Must be one of: ',Quote_ovr.CURRENCY)'''
+    
 class Quote_ovr(models.Model):
     record_created_at = models.DateTimeField(auto_now_add=True)
     Quote_no = models.CharField(max_length = 50,unique=True,null=False)
@@ -20,10 +24,12 @@ class Quote_ovr(models.Model):
                ('USD','US DOLLAR'),
                ('GBP','GREAT BRITISH POUND'))
 
-    Currency = models.CharField(max_length = 3, choices = CURRENCY)
+    Currency = models.CharField(max_length = 4, choices = CURRENCY)
     def __str__(self):
         return(f"{self.id}")
     
+
+        
 class Quote_det(models.Model):
     record_created_at = models.DateTimeField(auto_now_add=True)
     Quote_no = models.ForeignKey(Quote_ovr,null=True,blank=True,on_delete =models.CASCADE)

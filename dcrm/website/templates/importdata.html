@@ -1,5 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1> import data page</h1>
+<html>
+<head>
+    <title>Upload Excel File</title>
+</head>
+<body>
+    <h1>Upload Excel File</h1>
+    <form method="post" enctype="multipart/form-data" action="{% url 'importdata' %}">
+        {% csrf_token %}
+        <input type="file" name="file"> <br>
+        <input type="checkbox" name="h1">1st rows of sheet 1 are headers ?</input>
+        <button type="submit" >submit</button>
+    </form>
+
+</body>
+</html>
 {% endblock %}

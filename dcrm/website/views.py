@@ -1,9 +1,14 @@
+from django.forms import ValidationError
 from django.shortcuts import render , redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from .forms import SignUpForm , AddQtOvr,AddQtDetail
 from .models import Quote_ovr , Quote_det
+from .resources import Quote_detResource,Quote_ovrResource
+from tablib import Dataset
 from django.db.models import Q
+import openpyxl as xl
+import pandas as pd
 
 # Create your views here.
 
@@ -168,9 +173,63 @@ def search(request):
         return redirect('home')
 
 def importdata(request):
+  
     if request.user.is_authenticated:
-        messages.success(request,"welcome")
+        if request.method == 'POST':
+            file = request.FILES['file']
+            header_checked = bool(request.POST.get('h1'))
+            header_index = None
+            if header_checked:
+                header_index = 0
+
+            workbook = pd.read_excel(file,sheet_name=['Sheet1','Sheet2'],header=header_index)
+            sheet1 = workbook['Sheet1'].values
+            sheet2 = workbook['Sheet2'].values
+            # process the data from the sheets here
+            # Ignore the first row of sheet1 if h1 is checked
+            
+            for x in range(0,len(sheet1)):
+                    try:
+                        # Create a new instance of the Quote_ovr model
+                        quote_ovr = Quote_ovr()
+                        quote_ovr.Quote_no = sheet1[x,2]
+                        quote_ovr.Quote_date = pd.to_datetime(sheet1[x,3],yearfirst=1)
+                        quote_ovr.Customer_name = sheet1[x,4]
+                        quote_ovr.Customer_email = sheet1[x,5]
+                        quote_ovr.Phone = sheet1[x,6]
+                        quote_ovr.Address = sheet1[x,7]
+                        quote_ovr.City = sheet1[x,8]
+                        quote_ovr.State = sheet1[x,9]
+                        quote_ovr.Zipcode = sheet1[x,10]
+                        #quote_ovr.Currency = sheet1[x,11]
+                        if quote_ovr.Currency in ['EUR','USD','GBP']:
+                            quote_ovr.Currency = sheet1[x,11]
+                            print(sheet1[x,11])
+                        else:
+                             messages.error(request, f"Error: Invalid data in row {x} CURRENCY COLUMN. Please check the data and try again for Quote overviews")
+                             break
+                        quote_ovr.save()
+                    except ValidationError as e:
+                        messages.error(request, f"Error: Invalid data in row {x}{e}. Please check the data and try again.")
+                        return render(request, 'importdata.html')
+                    
+
+            for x in range(0,len(sheet2)):
+                try:
+                  quotes_ovr_instance = Quote_ovr.objects.get(pk=sheet2[x,2])
+                  quote_det = Quote_det.objects.create(Quote_no=quotes_ovr_instance,
+                  Item_name = sheet2[x,3],
+                  Item_qty = sheet2[x,4],
+                  Item_no = sheet2[x,5],
+                  Item_per_unit_price = sheet2[x,6])
+                except ValidationError as e:
+                    messages.error(request, f"Error: Invalid data in row {x}. Please check the data and try again.")
+                    return render(request, 'importdata.html')
+                except Quote_ovr.DoesNotExist:
+                    messages.error(request, f"Error: Foreign key-primary key mismatch in row {x}. Please check the data and try again.")
+                    return render(request,'importdata.html')
+
+            messages.success(request,"Data imported")
         return render(request, 'importdata.html')
     else:
-        messages.success(request,"You must be logged in to view that")
-        return redirect('home')
+        return render(request, 'login.html')
