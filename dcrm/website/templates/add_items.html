@@ -10,8 +10,8 @@
             
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="btn btn-success offset-md-4">Add</button>        
-            <a href="{% url 'record' quote_ovr.id %}" class="btn btn-dark">BACK</a>
+            <button type="submit" class="btn btn-success offset-md-4"  aria-label="Add Item">Add</button>        
+            <a href="{% url 'record' quote_ovr.Quote_no %}" class="btn btn-dark">BACK</a>
         </form>
         
 

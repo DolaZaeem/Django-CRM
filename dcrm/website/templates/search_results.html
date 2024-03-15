@@ -21,7 +21,7 @@
 
         {% for quote in quote_det %}
         <tr>
-            <td><a href="{%url 'record' quote.Quote_no %}">{{quote.Quote_no}}</a></td>
+            <td><a href="{%url 'record' quote.Quote_ref %}">{{quote.Quote_no}}</a></td>
             <td>{{quote.Item_name }}</td>
             <td>{{quote.Item_no}}</td>
             <td>{{quote.Item_qty}}</td>
@@ -56,7 +56,7 @@
     <tbody>
         {% for quote in quote_ovr %}
         <tr>
-            <td><a href="{%url 'record' quote.id %}">{{ quote.id }}</a></td>
+            <td><a href="{%url 'record' quote.Quote_no %}">{{ quote.id }}</a></td>
             <td>{{ quote.Customer_name }}</td>
             <td>{{ quote.Quote_no }}</td>
             <td>{{ quote.Quote_date }}</td>

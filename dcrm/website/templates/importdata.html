@@ -6,14 +6,19 @@
     <title>Upload Excel File</title>
 </head>
 <body>
-    <h1>Upload Excel File</h1>
+    
+    <div class="col-md-5 offset-md-3 border border-dark rounded-4 py-5 px-5 bg-light">
+        <h1>Upload Excel File</h1>
     <form method="post" enctype="multipart/form-data" action="{% url 'importdata' %}">
         {% csrf_token %}
-        <input type="file" name="file"> <br>
-        <input type="checkbox" name="h1">1st rows of sheet 1 are headers ?</input>
-        <button type="submit" >submit</button>
+        <div class="mb-3">
+        <input type="file" name="file">
+    </div>
+     <br>
+        <input type="checkbox" name="h1">1st row of sheets are headers ?</input>
+        <button type="submit" class="btn btn-success offset-md-4">submit</button>
     </form>
-
+    </div>
 </body>
 </html>
 {% endblock %}

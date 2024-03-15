@@ -8,8 +8,8 @@
             {% csrf_token %}
             {{ form.as_p }}
            
-            <button type="submit" class="btn btn-success offset-md-4">UPDATE Record</button>
-            <a href="{% url 'home' %}" class="btn btn-dark">BACK</a>
+            <button type="submit" class="btn btn-success offset-md-4"  aria-label="Save Changes to Item">UPDATE Item</button>
+            <a href="{% url 'record' current_record.Quote_ref %}" class="btn btn-dark">BACK</a>
         </form>
 </div>
 

@@ -2,21 +2,22 @@
 
 {% block content %}
 
-<h1> Customer record</h1>
+<h1> Quote record</h1>
 
 <div class="card">
     <div class="card-header">
-        <strong>{{customer_record.Quote_no }}</strong>
+        <strong>{{quote_record.Quote_no }}</strong>
     </div>
     <div class="card-body">
         <p class="card-text">
-            <strong>Email:</strong> {{customer_record.Customer_email }}<br>
-            <strong>Phone:</strong> {{ customer_record.Phone }}<br>
-            <strong>Address:</strong> {{ customer_record.Address }}<br>
-            <strong>City:</strong> {{ customer_record.City }}<br>
-            <strong>state:</strong> {{ customer_record.State }}<br>
-            <strong>zipcode:</strong> {{ customer_record.Zipcode }}<br>
+            <strong>Email:</strong> {{quote_record.Customer_email }}<br>
+            <strong>Phone:</strong> {{ quote_record.Phone }}<br>
+            <strong>Address:</strong> {{ quote_record.Address }}<br>
+            <strong>City:</strong> {{ quote_record.City }}<br>
+            <strong>state:</strong> {{ quote_record.State }}<br>
+            <strong>zipcode:</strong> {{ quote_record.Zipcode }}<br>
         </p>
+        
         <table class="table table-striped table-hover table-bordered table-sm">
             <thead class="table-dark">
                 <tr>
@@ -24,17 +25,19 @@
                     <th scope="col">Item No</th>
                     <th scope="col">Item Quantity</th>
                     <th scope="col">Per unit Price</th>
+                    <th scope="col">Quote ref</th>
                     <th scope="col" style="width:30%">Total</th>
                 </tr>
             </thead>
             <tbody>
                 {% if quote_details %}
-                {% for qt in quote_details%}    
+                {% for qt in quote_details %}    
                 <tr>
                     <td><a href="{%url 'update_item' qt.id %}">{{ qt.Item_name }}</a></td>
                     <td>{{qt.Item_no}}</td>
                     <td>{{qt.Item_qty}}</td>
                     <td>{{qt.Item_per_unit_price}}</td>
+                    <td>{{qt.Quote_ref}}</td>
                     <td>{{qt.product_line_total}}
                          <a href="{% url 'delete_items' qt.id %}">
                             <i class="fa-solid fa-trash" style="margin-left: 250px;margin-right: 5%;"></i>
@@ -47,11 +50,12 @@
                 {% endfor %}
                 {% endif %}
                 <tr>
-                    <td><a class="nav-link" href="{% url 'add_items' customer_record.id %}"><i
-                                class="fas fa-plus"></i></a></td>
+                    <td><a class="nav-link" href="{% url 'add_items' quote_record.Quote_no %}"><i
+                                class="fas fa-plus"  aria-label="Add Item"></i></a></td>
                 </tr>
             </tbody>
         </table>
+   
     </div>
 
 </div>
@@ -59,9 +63,9 @@
 <br>
 <a href="{% url 'home' %}" class="btn btn-dark">BACK</a>
 
-<a href="{% url 'delete_record' customer_record.id %}" class="btn btn-danger">DELETE</a>
+<a href="{% url 'delete_record' quote_record.Quote_no %}" class="btn btn-danger">DELETE</a>
 
-<a href="{% url 'update_record' customer_record.id %}" class="btn btn-warning">UPDATE RECORD</a>
+<a href="{% url 'update_record' quote_record.Quote_no %}" class="btn btn-warning">UPDATE RECORD</a>
 
-
+      
 {% endblock %}

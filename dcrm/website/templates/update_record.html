@@ -9,7 +9,7 @@
             {{ form.as_p }}
            
             <button type="submit" class="btn btn-success offset-md-4">UPDATE Record</button>
-            <a href="{% url 'home' %}" class="btn btn-dark">BACK</a>
+            <a href="{% url 'record' form.instance.Quote_no %}" class="btn btn-dark">BACK</a>
         </form>
 </div>
 

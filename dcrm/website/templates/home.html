@@ -28,7 +28,7 @@
                 {% if records %}
                 {% for qt in records %}
                 <tr>
-                    <td><a href="{%url 'record' qt.id %}">{{ qt.id }}</a></td>
+                    <td><a href="{%url 'record' qt.Quote_no %}">{{ qt.id }}</a></td>
                     <td>{{ qt.Customer_name }}</td>
                     <td>{{ qt.Quote_no }}</td>
                     <td>{{ qt.Quote_date }}</td>
@@ -43,7 +43,7 @@
                 {% endfor %}
                 {% endif %}
                 <tr>
-                    <td><a class="nav-link" href="{% url 'add_record' %}"><i class="fas fa-plus"></i></a></td>
+                    <td><a class="nav-link" href="{% url 'add_record' %}" aria-label="Add Quote"><i class="fas fa-plus"></i></a></td>
                 </tr>
             </tbody>
         </table>

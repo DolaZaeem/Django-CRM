@@ -4,11 +4,11 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from .forms import SignUpForm , AddQtOvr,AddQtDetail
 from .models import Quote_ovr , Quote_det
-from .resources import Quote_detResource,Quote_ovrResource
-from tablib import Dataset
 from django.db.models import Q
-import openpyxl as xl
 import pandas as pd
+from django.core.exceptions import ValidationError
+import pandas as pd
+
 
 # Create your views here.
 
@@ -57,20 +57,20 @@ def register_user(request):
     return render(request,'register.html',{'form':form})
 
 
-def customer_record(request,pk):
+def quote_record(request,quote_no_ref):
     if request.user.is_authenticated:
         #Look up record
-        customer_record = Quote_ovr.objects.get(id=pk)
-        quote_det = Quote_det.objects.filter(Quote_no=pk)
+        quote_record = Quote_ovr.objects.get(Quote_no=quote_no_ref)
+        quote_det = Quote_det.objects.filter(Quote_ref=quote_no_ref)
    
-        return render(request,'record.html',{'customer_record':customer_record,"quote_details":quote_det})
+        return render(request,'record.html',{'quote_record':quote_record,"quote_details":quote_det})
     else:
         messages.success(request,"Log in to view details of records")
         return redirect('home')
     
-def delete_record(request,pk):
+def delete_record(request,quote_no_ref):
     if request.user.is_authenticated:
-        delete_it = Quote_ovr.objects.get(id=pk)
+        delete_it = Quote_ovr.objects.get(Quote_no=quote_no_ref)
         delete_it.delete()
         messages.success(request,"Record Deleted Successfully")
         return redirect('home')
@@ -84,35 +84,35 @@ def add_record(request):
         if form.is_valid():
             form.save()
             messages.success(request,"Added record")
-            return redirect('add_items', pk=form.instance.pk)
+            return redirect('add_items', quote_no_ref=form.instance.Quote_no)
     else:
         form =AddQtOvr()
         return render(request,'add_record.html',{'form':form})
     return render(request,'add_record.html',{'form':form})
 
 
-def update_record(request,pk):
+def update_record(request,quote_no_ref):
     if request.user.is_authenticated:
-        current_record = Quote_ovr.objects.get(id=pk)
+        current_record = Quote_ovr.objects.get(Quote_no=quote_no_ref)
         form = AddQtOvr(request.POST or None,instance=current_record)
         if form.is_valid():
             form.save()
             messages.success(request,"Record has been update")
-            return redirect('home')
+            return redirect('record',quote_no_ref=form.instance.Quote_no)
         return render(request,'update_record.html',{'form':form})
     else:
         messages.success(request,"You must be logged in.")
         return redirect('home')
     
-def add_items(request, pk):
+def add_items(request, quote_no_ref):
     if request.user.is_authenticated:
-        quote_ovr = Quote_ovr.objects.get(id=pk)
+        quote_ovr = Quote_ovr.objects.get(Quote_no=quote_no_ref)
         if request.method == 'POST':
             form = AddQtDetail(request.POST)
             if form.is_valid():
-                form.instance.Quote_no = quote_ovr
+                form.instance.Quote_ref = quote_ovr
                 form.save()
-                return redirect('record', pk=quote_ovr.pk)
+                return redirect('record', quote_no_ref=quote_ovr.Quote_no)
         else:
             form = AddQtDetail()
         return render(request, 'add_items.html', {'form': form, 'quote_ovr': quote_ovr})
@@ -126,9 +126,9 @@ def update_item(request,pk):
         if form.is_valid():
             form.save()
             messages.success(request,"Record has been updated")
-            return redirect('record', pk=current_record.Quote_no)
+            return redirect('record', quote_no_ref=current_record.Quote_ref)
             
-        return render(request,'item_details.html',{'form':form})
+        return render(request,'item_details.html',{'form':form,'current_record':current_record})
     else:
         messages.success(request,"You must be logged in.")
         return redirect('home')
@@ -138,7 +138,7 @@ def delete_items(request,pk):
         delete_it = Quote_det.objects.get(id=pk)
         delete_it.delete()
         messages.success(request,"Item Deleted Successfully")
-        return redirect('record', pk=delete_it.Quote_no)
+        return redirect('record', quote_no_ref=delete_it.Quote_ref)
     else:
         messages.success(request,"You must be logged in to delete that")
         return redirect('home')
@@ -187,49 +187,58 @@ def importdata(request):
             sheet2 = workbook['Sheet2'].values
             # process the data from the sheets here
             # Ignore the first row of sheet1 if h1 is checked
-            
+          
             for x in range(0,len(sheet1)):
-                    try:
-                        # Create a new instance of the Quote_ovr model
-                        quote_ovr = Quote_ovr()
-                        quote_ovr.Quote_no = sheet1[x,2]
-                        quote_ovr.Quote_date = pd.to_datetime(sheet1[x,3],yearfirst=1)
-                        quote_ovr.Customer_name = sheet1[x,4]
-                        quote_ovr.Customer_email = sheet1[x,5]
-                        quote_ovr.Phone = sheet1[x,6]
-                        quote_ovr.Address = sheet1[x,7]
-                        quote_ovr.City = sheet1[x,8]
-                        quote_ovr.State = sheet1[x,9]
-                        quote_ovr.Zipcode = sheet1[x,10]
-                        #quote_ovr.Currency = sheet1[x,11]
-                        if quote_ovr.Currency in ['EUR','USD','GBP']:
-                            quote_ovr.Currency = sheet1[x,11]
-                            print(sheet1[x,11])
-                        else:
-                             messages.error(request, f"Error: Invalid data in row {x} CURRENCY COLUMN. Please check the data and try again for Quote overviews")
-                             break
-                        quote_ovr.save()
-                    except ValidationError as e:
-                        messages.error(request, f"Error: Invalid data in row {x}{e}. Please check the data and try again.")
-                        return render(request, 'importdata.html')
-                    
+                try:
+                    # Create a new instance of the Quote_ovr model
+                    quote_ovr_model = Quote_ovr()
+                    quote_ovr_model.Quote_no = sheet1[x,2]
+                    quote_ovr_model.Quote_date = pd.to_datetime(sheet1[x,3],yearfirst=1)
+                    quote_ovr_model.Customer_name = sheet1[x,4]
+                    quote_ovr_model.Customer_email = sheet1[x,5]
+                    quote_ovr_model.Phone = sheet1[x,6]
+                    quote_ovr_model.Address = sheet1[x,7]
+                    quote_ovr_model.City = sheet1[x,8]
+                    quote_ovr_model.State = sheet1[x,9]
+                    quote_ovr_model.Zipcode = sheet1[x,10]
+                    quote_ovr_model.Currency = sheet1[x,11]
+                    quote_ovr_model.save()
+                except ValidationError as e:
+                    # Handle integrity errors here
+                    messages.error(request, f"Error: Invalid form entry error at row {x+1}.")
+                except Exception as e:
+                    # Handle other exceptions here
+                    messages.error(request, f"Error: something went wrong at row{x+1}.{e}")
+                                    
+
+                    '''if quote_ovr.Currency in ['EUR','USD','GBP']:
+                        quote_ovr.Currency = sheet1[x,11]
+                        print(sheet1[x,11])
+                    else:
+                            messages.error(request, f"Error: Invalid data in row {x} CURRENCY COLUMN. Please check the data and try again for Quote overviews")
+                            break'''
+                   
 
             for x in range(0,len(sheet2)):
                 try:
-                  quotes_ovr_instance = Quote_ovr.objects.get(pk=sheet2[x,2])
-                  quote_det = Quote_det.objects.create(Quote_no=quotes_ovr_instance,
-                  Item_name = sheet2[x,3],
-                  Item_qty = sheet2[x,4],
-                  Item_no = sheet2[x,5],
-                  Item_per_unit_price = sheet2[x,6])
+                  quote_det_model = Quote_det()
+                  instance = Quote_ovr.objects.get(Quote_no = sheet2[x,2])
+                  quote_det_model.Quote_ref = instance
+                  quote_det_model.Item_name = sheet2[x,3]
+                  quote_det_model.Item_qty = sheet2[x,4]
+                  quote_det_model.Item_no = sheet2[x,5]
+                  quote_det_model.Item_per_unit_price = sheet2[x,6]
+                  quote_det_model.save()
                 except ValidationError as e:
                     messages.error(request, f"Error: Invalid data in row {x}. Please check the data and try again.")
                     return render(request, 'importdata.html')
                 except Quote_ovr.DoesNotExist:
                     messages.error(request, f"Error: Foreign key-primary key mismatch in row {x}. Please check the data and try again.")
                     return render(request,'importdata.html')
+                except TypeError as e:
+                    messages.error(request,f"Error:{e} at  row {x} ")
 
-            messages.success(request,"Data imported")
+            #messages.success(request,"Data imported")
         return render(request, 'importdata.html')
     else:
         return render(request, 'login.html')

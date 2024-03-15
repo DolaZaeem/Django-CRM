@@ -63,5 +63,5 @@ class AddQtDetail(forms.ModelForm):
     class Meta:
         model = Quote_det
         fields = ['Item_name','Item_qty','Item_no','Item_per_unit_price']
-        exclude =("user","Quote_no","product_line_total")    
+        exclude =("user","Quote_ref","product_line_total")    
 

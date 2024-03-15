@@ -26,13 +26,13 @@ class Quote_ovr(models.Model):
 
     Currency = models.CharField(max_length = 4, choices = CURRENCY)
     def __str__(self):
-        return(f"{self.id}")
+        return(f"{self.Quote_no}")
     
 
         
 class Quote_det(models.Model):
     record_created_at = models.DateTimeField(auto_now_add=True)
-    Quote_no = models.ForeignKey(Quote_ovr,null=True,blank=True,on_delete =models.CASCADE)
+    Quote_ref = models.ForeignKey(Quote_ovr,null=False,blank=False,on_delete =models.CASCADE,to_field='Quote_no')
     Item_name = models.CharField(max_length = 200,null=True)
     Item_qty = models.PositiveIntegerField(null=True)
     Item_no = models.CharField(max_length = 50,null=True)
