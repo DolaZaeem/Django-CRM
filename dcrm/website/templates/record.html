@@ -12,7 +12,7 @@
         <p class="card-text">
             <strong>Email:</strong> {{quote_record.Customer_email }}<br>
             <strong>Phone:</strong> {{ quote_record.Phone }}<br>
-            <strong>Address:</strong> {{ quote_record.Address }}<br>
+            <strong>Country:</strong> {{ quote_record.Country }}<br>
             <strong>City:</strong> {{ quote_record.City }}<br>
             <strong>state:</strong> {{ quote_record.State }}<br>
             <strong>zipcode:</strong> {{ quote_record.Zipcode }}<br>
@@ -25,7 +25,6 @@
                     <th scope="col">Item No</th>
                     <th scope="col">Item Quantity</th>
                     <th scope="col">Per unit Price</th>
-                    <th scope="col">Quote ref</th>
                     <th scope="col" style="width:30%">Total</th>
                 </tr>
             </thead>
@@ -37,7 +36,6 @@
                     <td>{{qt.Item_no}}</td>
                     <td>{{qt.Item_qty}}</td>
                     <td>{{qt.Item_per_unit_price}}</td>
-                    <td>{{qt.Quote_ref}}</td>
                     <td>{{qt.product_line_total}}
                          <a href="{% url 'delete_items' qt.id %}">
                             <i class="fa-solid fa-trash" style="margin-left: 250px;margin-right: 5%;"></i>

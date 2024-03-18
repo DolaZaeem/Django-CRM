@@ -160,7 +160,7 @@ def search(request):
                                                 Q(Quote_date__icontains=query)|
                                                 Q(Quote_no__icontains=query)|
                                                 Q(City__icontains=query)|
-                                                Q(Address__icontains=query)|
+                                                Q(Country__icontains=query)|
                                                 Q(State__icontains=query)|
                                                 Q(Currency__icontains=query)|
                                                 Q(Zipcode__icontains=query))
@@ -197,28 +197,23 @@ def importdata(request):
                     quote_ovr_model.Customer_name = sheet1[x,4]
                     quote_ovr_model.Customer_email = sheet1[x,5]
                     quote_ovr_model.Phone = sheet1[x,6]
-                    quote_ovr_model.Address = sheet1[x,7]
+                    quote_ovr_model.Country = sheet1[x,7]
                     quote_ovr_model.City = sheet1[x,8]
                     quote_ovr_model.State = sheet1[x,9]
                     quote_ovr_model.Zipcode = sheet1[x,10]
                     quote_ovr_model.Currency = sheet1[x,11]
                     quote_ovr_model.save()
+                    
                 except ValidationError as e:
                     # Handle integrity errors here
                     messages.error(request, f"Error: Invalid form entry error at row {x+1}.")
                 except Exception as e:
                     # Handle other exceptions here
                     messages.error(request, f"Error: something went wrong at row{x+1}.{e}")
-                                    
 
-                    '''if quote_ovr.Currency in ['EUR','USD','GBP']:
-                        quote_ovr.Currency = sheet1[x,11]
-                        print(sheet1[x,11])
-                    else:
-                            messages.error(request, f"Error: Invalid data in row {x} CURRENCY COLUMN. Please check the data and try again for Quote overviews")
-                            break'''
+                    
+
                    
-
             for x in range(0,len(sheet2)):
                 try:
                   quote_det_model = Quote_det()
@@ -229,6 +224,7 @@ def importdata(request):
                   quote_det_model.Item_no = sheet2[x,5]
                   quote_det_model.Item_per_unit_price = sheet2[x,6]
                   quote_det_model.save()
+        
                 except ValidationError as e:
                     messages.error(request, f"Error: Invalid data in row {x}. Please check the data and try again.")
                     return render(request, 'importdata.html')
@@ -237,8 +233,8 @@ def importdata(request):
                     return render(request,'importdata.html')
                 except TypeError as e:
                     messages.error(request,f"Error:{e} at  row {x} ")
-
-            #messages.success(request,"Data imported")
+        
+            messages.success(request,"Data imported")
         return render(request, 'importdata.html')
     else:
         return render(request, 'login.html')

@@ -21,7 +21,7 @@
 
         {% for quote in quote_det %}
         <tr>
-            <td><a href="{%url 'record' quote.Quote_ref %}">{{quote.Quote_no}}</a></td>
+            <td><a href="{%url 'record' quote.Quote_ref %}">{{quote.Quote_ref}}</a></td>
             <td>{{quote.Item_name }}</td>
             <td>{{quote.Item_no}}</td>
             <td>{{quote.Item_qty}}</td>
@@ -46,7 +46,7 @@
             <th scope="col">Quote Date</th>
             <th scope="col">Email</th>
             <th scope="col">Phone</th>
-            <th scope="col">Address</th>
+            <th scope="col">Country</th>
             <th scope="col">City</th>
             <th scope="col">State</th>
             <th scope="col">zipcode</th>
@@ -62,7 +62,7 @@
             <td>{{ quote.Quote_date }}</td>
             <td>{{ quote.Customer_email }}</td>
             <td>{{ quote.Phone }}</td>
-            <td>{{ quote.Address }}</td>
+            <td>{{ quote.Country }}</td>
             <td>{{ quote.City }}</td>
             <td>{{ quote.State }} </td>
             <td>{{ quote.Zipcode }}</td>

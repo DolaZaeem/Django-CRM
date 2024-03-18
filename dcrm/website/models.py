@@ -15,16 +15,23 @@ class Quote_ovr(models.Model):
     Customer_name = models.CharField(max_length = 100,null=True)
     Customer_email = models.EmailField(null=True)
     Phone = models.CharField(max_length = 15,null=True)
-    Address = models.CharField(max_length = 100,null=True)
-    City = models.CharField(max_length = 50,null=True)
+    Country = models.CharField(max_length = 100,null=True)
     State = models.CharField(max_length = 50,null=True)
+    City = models.CharField(max_length = 50,null=True)
     Zipcode = models.CharField(max_length = 20,null=True)
+
     #choices for currency
     CURRENCY= (('EUR','EURO'),
                ('USD','US DOLLAR'),
                ('GBP','GREAT BRITISH POUND'))
+    #choices for Customer Type
+    CustomerType= (('RET','Retailer'),
+               ('WHO','Wholesaler')
+               )
 
     Currency = models.CharField(max_length = 4, choices = CURRENCY)
+    Customer_Type = models.CharField(max_length = 4, choices = CustomerType)
+
     def __str__(self):
         return(f"{self.Quote_no}")
     

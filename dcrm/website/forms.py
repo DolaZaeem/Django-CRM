@@ -41,14 +41,15 @@ class AddQtOvr(forms.ModelForm):
     Customer_name = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"Customer Name","class":"form-control"}),label="")
     Customer_email = forms.CharField(required=True, widget=forms.widgets.EmailInput(attrs={'placeholder':"Customer Email","class":"form-control"}),label="")
     Phone = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"Phone","class":"form-control"}),label="")
-    Address = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"Address","class":"form-control"}),label="")
+    Country = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"Country","class":"form-control"}),label="")
     City = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"City","class":"form-control"}),label="")
     State =forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"State","class":"form-control"}),label="")
     Zipcode = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"Zipcode","class":"form-control"}),label="")
     Currency = forms.ChoiceField(required=True, choices=Quote_ovr.CURRENCY, widget=forms.widgets.Select(attrs={'class':'form-control'}),label="")
+    Customer_Type = forms.ChoiceField(required=True, choices=Quote_ovr.CustomerType, widget=forms.widgets.Select(attrs={'class':'form-control'}),label="")
     class Meta:
             model = Quote_ovr
-            fields = ['Quote_no', 'Quote_date', 'Customer_name', 'Customer_email', 'Phone', 'Address', 'City', 'State', 'Zipcode','Currency']
+            fields = ['Quote_no', 'Quote_date', 'Customer_name', 'Customer_email', 'Phone', 'Country', 'City', 'State', 'Zipcode','Currency',"Customer_Type"]
             exclude = ('user',)
 #Create A Quote Detail Form
 class AddQtDetail(forms.ModelForm):
