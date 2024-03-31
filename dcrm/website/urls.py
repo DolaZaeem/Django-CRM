@@ -16,4 +16,6 @@ urlpatterns = [
     path('Incomplete',views.Incomplete,name='Incomplete'), #quotes without items
     path('search/', views.search, name='search'),
     path('importdata/', views.importdata, name='importdata'),
+    path('train_svm/', views.train_svm, name='train_svm'),
+
 ]

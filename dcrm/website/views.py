@@ -7,7 +7,14 @@ from .models import Quote_ovr , Quote_det
 from django.db.models import Q
 import pandas as pd
 from django.core.exceptions import ValidationError
-import pandas as pd
+import numpy as np
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+from datetime import datetime
+import pickle
+from sklearn.svm import SVC
+import os
 
 
 # Create your views here.
@@ -211,9 +218,6 @@ def importdata(request):
                     # Handle other exceptions here
                     messages.error(request, f"Error: something went wrong at row{x+1}.{e}")
 
-                    
-
-                   
             for x in range(0,len(sheet2)):
                 try:
                   quote_det_model = Quote_det()
@@ -238,3 +242,75 @@ def importdata(request):
         return render(request, 'importdata.html')
     else:
         return render(request, 'login.html')
+    
+import os
+import pickle
+
+def train_svm(request):
+    # Set the path to the pickle file
+    pickle_path = os.path.join(os.path.dirname(__file__), 'training_details.pkl')
+
+    # Check if the pickle file exists
+    if os.path.isfile(pickle_path):
+        # Load the training details from the pickle file
+        with open(pickle_path, 'rb') as f:
+            training_details = pickle.load(f)
+    else:
+        # Initialize the training details
+        training_details = {
+            "date_trained": None,
+            "num_records": None,
+            "mse": None
+        }
+
+    if 'train' in request.GET:
+        # Perform the SVM training
+        data = []
+        queryset = Quote_ovr.objects.all()
+        for quote_ovr in queryset:
+            quote_det = Quote_det.objects.filter(Quote_ref=quote_ovr.Quote_no)
+            for item in quote_det:
+                data.append([
+                    quote_ovr.Customer_Type,
+                    quote_ovr.Country,
+                    item.Item_name,
+                    item.Item_per_unit_price,
+                ])
+
+        # Convert list to a numpy array and remove the target column
+        data = np.array(data)
+        X_data = np.delete(data, 3, axis=1)
+
+        # Prepare the OneHotEncoder and fit to the feature data
+        encoder = OneHotEncoder()
+        X_encoded = encoder.fit_transform(X_data)
+
+         # Convert target column to numeric values
+        y_data = [float(item) for item in data[:, 3]]
+
+        # Split the data into training and testing sets
+        X_train, X_test, y_train, y_test = train_test_split(X_encoded, y_data, test_size=0.2, random_state=42)
+
+        # Train the SVM model
+        model = SVC(kernel='linear', C=1)
+        model.fit(X_train, y_train)
+
+        # Calculate the MSE of the model
+        y_pred = model.predict(X_test)
+        mse = mean_squared_error(y_test, y_pred)
+
+        # Save the training details
+        training_details = {
+            "date_trained": datetime.now(),
+            "num_records": len(data),
+            "mse": round(mse,2)
+        }
+
+        # Display success message
+        messages.success(request, "Training successful!")
+
+        # Save the training details to the pickle file
+        with open(pickle_path, 'wb') as f:
+            pickle.dump(training_details, f)
+
+    return render(request, 'train_svm.html', {'training_details': training_details})

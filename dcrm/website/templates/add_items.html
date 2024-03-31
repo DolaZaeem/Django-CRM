@@ -7,10 +7,12 @@
         <h5>QUOTE NO: {{quote_ovr.Quote_no}}</h5>
         <hr>
         <form method="post" autocomplete="on">
-            
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="btn btn-success offset-md-4"  aria-label="Add Item">Add</button>        
+            <hr>
+            <button type="submit" class="btn btn-success offset-md-4"  aria-label="Add Item">Add</button>
+            
+            <button type="submit" name="predict_price" class="btn btn-primary offset-md-4"  aria-label="Predict Price">Predict Price</button>
             <a href="{% url 'record' quote_ovr.Quote_no %}" class="btn btn-dark">BACK</a>
         </form>
         

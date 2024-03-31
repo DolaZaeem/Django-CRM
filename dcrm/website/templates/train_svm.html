@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if training_details.date_trained %}
+<div class="card text-center">
+    <div class="card-header">
+        <a href="{% url 'train_svm' %}?train" class="btn btn-success">Train Price Suggestor</a>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Details</h5>
+      <p class="card-text">Number of Records : {{training_details.num_records}}</p>
+      <p class="card-text">Mean Squared Error : {{training_details.mse}}</p>  <!-- change "MSE" to "mse" -->
+    </div>
+    <div class="card-footer text-body-secondary">
+        Last Trained: {{training_details.date_trained}}
+    </div>
+  </div>
+{% else %}
+<div class="card text-center">
+    <div class="card-header">
+        <a href="{% url 'train_svm' %}?train" class="btn btn-success">Train Price Suggestor</a>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Details</h5>
+      <p class="card-text">Number of Records : N/A</p>
+      <p class="card-text">Mean Squared Error : N/A</p>  <!-- change "MSE" to "mse" -->
+    </div>
+    <div class="card-footer text-body-secondary">
+        Last Trained: N/A
+    </div>
+  </div>
+
+
+{% endif %}
+
+{% endblock %}
