@@ -2,7 +2,7 @@ from django.forms import ValidationError
 from django.shortcuts import render , redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-from .forms import SignUpForm , AddQtOvr,AddQtDetail
+from .forms import SignUpForm , AddQtOvr,AddQtDetail , SuggestPriceForm
 from .models import Quote_ovr , Quote_det
 from django.db.models import Q
 import pandas as pd
@@ -13,8 +13,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from datetime import datetime
 import pickle
-from sklearn.svm import SVC
+from sklearn.svm import SVR
 import os
+from django.shortcuts import render, get_object_or_404
 
 
 # Create your views here.
@@ -119,6 +120,7 @@ def add_items(request, quote_no_ref):
             if form.is_valid():
                 form.instance.Quote_ref = quote_ovr
                 form.save()
+                messages.success(request,"Item has been added")
                 return redirect('record', quote_no_ref=quote_ovr.Quote_no)
         else:
             form = AddQtDetail()
@@ -243,12 +245,14 @@ def importdata(request):
     else:
         return render(request, 'login.html')
     
-import os
-import pickle
+
 
 def train_svm(request):
     # Set the path to the pickle file
-    pickle_path = os.path.join(os.path.dirname(__file__), 'training_details.pkl')
+    downloads_path = os.path.join(os.path.expanduser("~"), "Downloads")
+    models_path = os.path.join(downloads_path, "Trained Models")
+    pickle_path = os.path.join(models_path, 'training_details.pkl')
+   
 
     # Check if the pickle file exists
     if os.path.isfile(pickle_path):
@@ -272,27 +276,32 @@ def train_svm(request):
             for item in quote_det:
                 data.append([
                     quote_ovr.Customer_Type,
-                    quote_ovr.Country,
-                    item.Item_name,
+                    quote_ovr.Country.lower(),
+                    item.Item_name.lower(),
                     item.Item_per_unit_price,
                 ])
 
-        # Convert list to a numpy array and remove the target column
-        data = np.array(data)
-        X_data = np.delete(data, 3, axis=1)
+        # Create a dataframe from the data
+        df = pd.DataFrame(data, columns=['Customer_Type', 'Country', 'Item_name', 'Item_per_unit_price'])
+
+        # Convert the 'Item_per_unit_price' column to numeric values
+        df['Item_per_unit_price'] = pd.to_numeric(df['Item_per_unit_price'])
+
+        # Select the desired columns for the feature data
+        X_data = df[['Customer_Type', 'Country', 'Item_name']]
 
         # Prepare the OneHotEncoder and fit to the feature data
         encoder = OneHotEncoder()
         X_encoded = encoder.fit_transform(X_data)
 
-         # Convert target column to numeric values
-        y_data = [float(item) for item in data[:, 3]]
+        # Prepare the target data
+        y_data = df['Item_per_unit_price']
 
         # Split the data into training and testing sets
         X_train, X_test, y_train, y_test = train_test_split(X_encoded, y_data, test_size=0.2, random_state=42)
 
         # Train the SVM model
-        model = SVC(kernel='linear', C=1)
+        model = SVR(kernel='linear', C=1e3,epsilon=0.2)
         model.fit(X_train, y_train)
 
         # Calculate the MSE of the model
@@ -306,11 +315,72 @@ def train_svm(request):
             "mse": round(mse,2)
         }
 
-        # Display success message
-        messages.success(request, "Training successful!")
+       # Save the model and the encoder
+        models_path = os.path.join(os.path.expanduser("~"), "Downloads", "Trained Models")
+        if not os.path.exists(models_path):
+            os.makedirs(models_path)
+        with open(os.path.join(models_path, 'model.pkl'), 'wb') as file:
+            pickle.dump(model, file)
+        with open(os.path.join(models_path, 'encoder.pkl'), 'wb') as file:
+            pickle.dump(encoder, file)
 
         # Save the training details to the pickle file
         with open(pickle_path, 'wb') as f:
             pickle.dump(training_details, f)
 
+  
+        # Display success message
+        messages.success(request, "Training successful!")
+        print(X_encoded[0][0:52])
+       
+
     return render(request, 'train_svm.html', {'training_details': training_details})
+
+def suggest_price(request):
+    if request.method == 'POST':
+        form = SuggestPriceForm(request.POST)
+        if form.is_valid():
+            item_name = request.POST['item_name'].lower()
+            country = request.POST['country'].lower()
+            customer_type = request.POST['customer_type']  
+            
+            # Check if the model file exists
+            downloads_path = os.path.join(os.path.expanduser("~"), "Downloads")
+            models_path = os.path.join(downloads_path, "Trained Models")
+            pickle_path = os.path.join(models_path, 'model.pkl')
+            if not os.path.isfile(pickle_path):
+                messages.error(request, "The model file does not exist.")
+                return render(request, 'suggest_price.html')
+
+            # Load the model
+            with open(pickle_path, 'rb') as f:
+                model = pickle.load(f)
+
+            # Prepare the input data for the model
+            input_data = pd.DataFrame({'Item_name': [item_name],
+                                        'Country': [country],
+                                        'Customer_Type': [customer_type]},
+                                    index=[0])
+
+            # Prepare the OneHotEncoder and fit to the feature data
+            # Fit the encoder using the training data
+            with open(os.path.join(models_path, 'encoder.pkl'), 'rb') as f:
+                encoder = pickle.load(f)
+        
+            X_new_encoded = encoder.transform(input_data[['Customer_Type', 'Country', 'Item_name']])
+
+            # Reshape to a 2D array to fit the model's input shape
+            X_new_encoded = X_new_encoded.toarray().reshape(1, -1)
+    
+            # Add the remaining features with a value of zero
+        
+            
+
+            # Make the prediction
+            suggestion = model.predict(X_new_encoded)
+            return render(request, 'suggest_price.html', {'form': form, 'suggestion': round(suggestion[0],2)})
+    else:
+        form = SuggestPriceForm()
+        return render(request, 'suggest_price.html', {'form': form})
+    
+ 

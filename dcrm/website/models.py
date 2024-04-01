@@ -43,7 +43,7 @@ class Quote_det(models.Model):
     Item_name = models.CharField(max_length = 200,null=True)
     Item_qty = models.PositiveIntegerField(null=True)
     Item_no = models.CharField(max_length = 50,null=True)
-    Item_per_unit_price = models.PositiveIntegerField(null=True)
+    Item_per_unit_price = models.PositiveIntegerField(null=True,default = 0)
 
 
     def __str__(self):

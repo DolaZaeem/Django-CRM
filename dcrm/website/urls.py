@@ -17,5 +17,6 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('importdata/', views.importdata, name='importdata'),
     path('train_svm/', views.train_svm, name='train_svm'),
-
+    path('suggest_price/', views.suggest_price, name='suggest_price'),
+ 
 ]

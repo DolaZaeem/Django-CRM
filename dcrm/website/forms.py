@@ -57,12 +57,16 @@ class AddQtDetail(forms.ModelForm):
     Item_name = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"Item Name","class":"form-control"}),label="")
     Item_qty = forms.IntegerField(required=True, widget=forms.widgets.NumberInput(attrs={'placeholder':"Item Qty","class":"form-control"}),label="")
     Item_no = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"Item no","class":"form-control"}),label="")
-    Item_per_unit_price = forms.IntegerField(required= False, widget=forms.widgets.NumberInput(attrs={'placeholder':"Per unit Price","class":"form-control"}),label="")
+    Item_per_unit_price = forms.IntegerField(required= True, widget=forms.widgets.NumberInput(attrs={'placeholder':"Per unit Price","class":"form-control"}),label="")
 
     
 
     class Meta:
         model = Quote_det
         fields = ['Item_name','Item_qty','Item_no','Item_per_unit_price']
-        exclude =("user","Quote_ref","product_line_total")    
+        exclude =("user","Quote_ref","product_line_total")   
 
+class SuggestPriceForm(forms.Form):
+    item_name =  forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"Item Name","class":"form-control"}),label="")
+    country =forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder':"Country","class":"form-control"}),label="")
+    customer_type = forms.ChoiceField(required=True, choices=Quote_ovr.CustomerType, widget=forms.widgets.Select(attrs={'class':'form-control','placeholder':"Customer Type"}),label="")

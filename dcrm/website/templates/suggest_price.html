@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="col-md-5 offset-md-3 border border-dark rounded-4 py-5 px-5 bg-light">
+    <h1>Suggest Price</h1>
+            <br>
+            <hr>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success offset-md-4"  aria-label="Add Item">Suggest Price</button>
+            </form>
+            <br>
+            
+            {% if suggestion %}
+            <p>The suggested price is: {{ suggestion }}</p>
+            {% endif %}
+            
+    
+    </div>
+{% endblock %}

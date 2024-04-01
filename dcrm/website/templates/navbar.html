@@ -26,14 +26,13 @@
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{% url 'Incomplete' %}">Quotes with no items</a></li>
+            <li><a class="dropdown-item"  href="{% url 'train_svm' %}">Train Price suggestor</a></li>
+            <li><a class="dropdown-item" href="{% url 'suggest_price' %}">Get price suggestion</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>
             <li><a class="dropdown-item" href="{% url 'importdata' %}">Import Data from Spreadsheet</a></li>
           </ul>
-        </li>
-        <li>
-            <a class="nav-link" href="{% url 'train_svm' %}"><i class="fa-solid fa-refresh"></i></a>
         </li>
       </ul>
       
