@@ -350,7 +350,7 @@ def suggest_price(request):
             pickle_path = os.path.join(models_path, 'model.pkl')
             if not os.path.isfile(pickle_path):
                 messages.error(request, "The model file does not exist.")
-                return render(request, 'suggest_price.html')
+                return render(request, 'suggest_price.html', {'form': form})
 
             # Load the model
             with open(pickle_path, 'rb') as f:
@@ -364,10 +364,18 @@ def suggest_price(request):
 
             # Prepare the OneHotEncoder and fit to the feature data
             # Fit the encoder using the training data
-            with open(os.path.join(models_path, 'encoder.pkl'), 'rb') as f:
-                encoder = pickle.load(f)
-        
-            X_new_encoded = encoder.transform(input_data[['Customer_Type', 'Country', 'Item_name']])
+            try:
+                with open(os.path.join(models_path, 'encoder.pkl'), 'rb') as f:
+                    encoder = pickle.load(f)
+            except FileNotFoundError:
+                messages.error(request, "The encoder file does not exist.")
+                return render(request, 'suggest_price.html', {'form': form})
+
+            try:
+                X_new_encoded = encoder.transform(input_data[['Customer_Type', 'Country', 'Item_name']])
+            except ValueError as e:
+                messages.error(request, f"Invalid input: {e}")
+                return render(request, 'suggest_price.html', {'form': form})
 
             # Reshape to a 2D array to fit the model's input shape
             X_new_encoded = X_new_encoded.toarray().reshape(1, -1)
@@ -381,6 +389,4 @@ def suggest_price(request):
             return render(request, 'suggest_price.html', {'form': form, 'suggestion': round(suggestion[0],2)})
     else:
         form = SuggestPriceForm()
-        return render(request, 'suggest_price.html', {'form': form})
-    
- 
+    return render(request, 'suggest_price.html', {'form': form})
