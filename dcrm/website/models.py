@@ -1,6 +1,6 @@
 from django.db import models
 from django.forms import ValidationError
-
+from django.core.validators import RegexValidator
 
 # Create your models here.
 
@@ -14,7 +14,7 @@ class Quote_ovr(models.Model):
     Quote_date = models.DateField(null=True)
     Customer_name = models.CharField(max_length = 100,null=True)
     Customer_email = models.EmailField(null=True)
-    Phone = models.CharField(max_length = 15,null=True)
+    Phone = models.CharField(max_length=11,validators=[(RegexValidator(r'^[1-9]\d*$'))],null=True)
     Country = models.CharField(max_length = 100,null=True)
     State = models.CharField(max_length = 50,null=True)
     City = models.CharField(max_length = 50,null=True)
